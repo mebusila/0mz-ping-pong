@@ -1,0 +1,27 @@
+version: '2'
+services:
+  redis:
+    image: redis
+    restart: always
+
+  ping:
+    build: .
+    command: ["python", "./ping_service.py"]
+    links:
+    - redis:redis
+
+  pong:
+    build: .
+    command: ["python", "./pong_service.py"]
+    links:
+    - redis:redis
+
+  pingpong:
+    build: .
+    command: ["python", "./main.py"]
+    depends_on:
+    - ping
+    - pong
+    - redis
+    links:
+    - redis:redis
